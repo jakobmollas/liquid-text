@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import * as Filters from 'pixi-filters';
 
 export function createBlurFilter() {
     const filter = new PIXI.filters.BlurFilter();
@@ -8,8 +9,15 @@ export function createBlurFilter() {
     return filter;
 }
 
-export function createThresholdFilter() {
-    // pixel shader used to sharpen image (after getting blurred).
+export function createBloomFilter() {
+    const filter = new Filters.BloomFilter();
+    filter.blur = 20;
+
+    return filter;
+}
+
+export function createThresholdColorizerFilter() {
+    // pixel shader used to sharpen and colorize image (after getting blurred).
     const fragSource = `
             precision mediump float;
             varying vec2 vTextureCoord;
@@ -20,22 +28,20 @@ export function createThresholdFilter() {
             uniform float mb;
             void main(void) {
                 vec4 color = texture2D(uSampler, vTextureCoord);
-                vec3 mcolor = vec3(mr, mg, mb);
                 if (color.a > threshold) {
-                    gl_FragColor = vec4(mcolor, 1.0);
+                    gl_FragColor = vec4(mr, vTextureCoord.y * mg, mb, 1.0);
                     //gl_FragColor = color;
                 } else {
-                    // transparent
-                    gl_FragColor = vec4(vec3(0.0), 0);
+                    gl_FragColor = vec4(vec3(0.0), 0);  // transparent
                 }
             }
         `;
 
-    // Create custom data top be passed to the shader
+    // Data to be passed to the shader
     const uniformsData = {
         threshold: 0.5,
         mr: 255.0 / 255.0,
-        mg: 0.0 / 255.0,
+        mg: 255.0 / 255.0,
         mb: 0.0 / 255.0
     }
 

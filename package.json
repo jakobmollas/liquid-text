@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pixi-filters": "^4.1.4",
     "pixi.js": "^6.1.2"
   },
   "devDependencies": {

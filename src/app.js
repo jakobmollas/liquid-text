@@ -52,9 +52,10 @@ class App {
         // then sharpen image using the threshold filter.
         // This will make particles appear as a liquid surface instead of individual particles/circles
         // Note: Filter order matters here.
-        const blurFilter = Shaders.createBlurFilter();
-        const thresholdFilter = Shaders.createThresholdFilter();
-        stage.filters = [blurFilter, thresholdFilter];
+        const blur = Shaders.createBlurFilter();
+        const thresholdColorizer = Shaders.createThresholdColorizerFilter();
+        const bloom = Shaders.createBloomFilter();
+        stage.filters = [blur, thresholdColorizer, bloom];
         stage.filterArea = renderer.screen;
     }
 
