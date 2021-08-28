@@ -16,7 +16,7 @@ export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
 
     // find a good size for the text based on canvas size
     while (true) {
-        ctx.font = `${fontWidth} ${fontSize}px ${fontName}`;
+        ctx.font = `${fontWidth} ${fontSize}px xx`;
         metrics = ctx.measureText(text);
         if (metrics.width > (stageWidth * 0.90))
             break;

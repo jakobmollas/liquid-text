@@ -9,27 +9,10 @@ window.onload = () => {
 
 class App {
     constructor() {
-        this.setWebgl();
-        this.LoadFonts();
+        this.initialize();
     }
 
-    LoadFonts() {
-        WebFont.load({
-            google: {
-                families: ['Hind:700']
-            },
-            fontactive: () => {
-                this.simulation = new Simulation();
-                this.gameTime = new GameTime();
-
-                window.addEventListener("resize", this.resize.bind(this), false);
-                this.resize();
-                requestAnimationFrame(this.animate.bind(this));
-            }
-        });
-    }
-
-    setWebgl() {
+    initialize() {
         this.renderer = new PIXI.Renderer({
             width: document.body.clientWidth,
             height: document.body.clientHeight,
@@ -83,6 +66,13 @@ class App {
         const thresholdFilter = new PIXI.Filter(null, fragSource, uniformsData);
         this.stage.filters = [blurFilter, thresholdFilter];
         this.stage.filterArea = this.renderer.screen;
+
+        this.simulation = new Simulation();
+        this.gameTime = new GameTime();
+
+        window.addEventListener("resize", this.resize.bind(this), false);
+        this.resize();
+        requestAnimationFrame(this.animate.bind(this));
     }
 
     resize() {
