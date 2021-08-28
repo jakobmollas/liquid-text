@@ -1,72 +1,54 @@
-export class Text {
-    constructor() {
-        this.canvas = document.createElement("canvas");
-        this.ctx = this.canvas.getContext("2d");
+export function TextToPoints(canvas, text, density, stageWidth, stageHeight) {
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = stageWidth;
+    canvas.height = stageHeight;
+
+    const fontWidth = 700;
+    const fontName = "Hind";
+    let fontSize = 10;
+    let metrics;
+
+    ctx.clearRect(0, 0, stageWidth, stageHeight);
+    ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    ctx.textBaseline = "middle";
+
+    // find a good size for the text
+    while (true) {
+        ctx.font = `${fontWidth} ${fontSize}px ${fontName}`;
+        metrics = ctx.measureText(text);
+        if (metrics.width > (stageWidth * 0.90))
+            break;
+
+        fontSize *= 1.1;
     }
 
-    setText(text, density, stageWidth, stageHeight) {
-        this.canvas.width = stageWidth;
-        this.canvas.height = stageHeight;
+    // write text - the resulting image will be used to calculate points
+    ctx.fillText(
+        text,
+        (stageWidth - metrics.width) / 2,
+        metrics.actualBoundingBoxAscent +
+        metrics.actualBoundingBoxDescent +
+        ((stageHeight - fontSize) / 2)
+    );
 
-        const myText = text;
-        const fontWidth = 700;
-        let fontSize = 800;
-        const fontName = "Hind";
-        let fontPos;
+    return createPoints(ctx, density, stageWidth, stageHeight);
+}
 
-        this.ctx.clearRect(0, 0, stageWidth, stageHeight);
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.3)"
-        this.ctx.textBaseline = "middle";
+function createPoints(ctx, pixelsPerPoint, stageWidth, stageHeight) {
+    const imageData = ctx.getImageData(0, 0, stageWidth, stageHeight).data;
 
-        while (true) {
-            this.ctx.font = `${fontWidth} ${fontSize}px ${fontName}`;
-            fontPos = this.ctx.measureText(myText);
-            if (fontPos.width < (stageWidth * 0.9))
-                break;
+    const points = [];
 
-            fontSize *= 0.9;
+    // sample image data and create points for pixels with data
+    for (let height = 0; height < stageHeight; height += pixelsPerPoint) {
+        for (let width = 0; width < stageWidth; width += pixelsPerPoint) {
+            const pixelAlpha = imageData[((width + (height * stageWidth)) * 4) - 1];
+
+            if (pixelAlpha != 0)
+                points.push({ x: width, y: height });
         }
-
-        this.ctx.fillText(
-            myText,
-            (stageWidth - fontPos.width) / 2,
-            fontPos.actualBoundingBoxAscent +
-            fontPos.actualBoundingBoxDescent +
-            ((stageHeight - fontSize) / 2)
-        );
-
-        return this.dotPos(density, stageWidth, stageHeight);
     }
 
-    dotPos(density, stageWidth, stageHeight) {
-        const imageData = this.ctx.getImageData(0, 0, stageWidth, stageHeight).data;
-
-        const particles = [];
-        let i = 0;
-        let width = 0;
-        let pixel;
-
-        for (let height = 0; height < stageHeight; height += density) {
-            ++i;
-            const slide = (i % 2) == 0;
-            width = 0;
-            if (slide == 1) {
-                width += 6;
-            }
-
-            for (width; width < stageWidth; width += density) {
-                const pixelIndex = ((width + (height * stageWidth)) * 4) - 1;
-                pixel = imageData[pixelIndex];
-                if (pixel != 0 &&
-                    width > 0 &&
-                    width < stageWidth &&
-                    height > 0 &&
-                    height <= stageHeight) {
-                    particles.push({ x: width, y: height });
-                }
-            }
-        }
-
-        return particles;
-    }
+    return points;
 }

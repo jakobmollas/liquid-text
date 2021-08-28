@@ -1,10 +1,9 @@
-import { Text } from "./text.js";
+import * as Text from "./text.js";
 import { Particle } from "./particle.js";
 import * as PIXI from 'pixi.js';
 
 export class Visual {
     constructor() {
-        this.text = new Text();
         this.texture = PIXI.Texture.from("./assets/particle.png");
         this.particles = [];
 
@@ -23,7 +22,9 @@ export class Visual {
         }
 
         // todo: to local variable?
-        this.pos = this.text.setText(text, 3, stageWidth, stageHeight);
+        // Todo: pass in from caller
+        const canvas = document.createElement("canvas");
+        this.pos = Text.TextToPoints(canvas, text, 6, stageWidth, stageHeight);
 
         this.container = new PIXI.ParticleContainer(
             this.pos.length,
