@@ -39,20 +39,15 @@ export class Simulation {
         stage.addChild(this.container);
 
         this.particles = [];
-        // points.forEach(point => {
-        //     const particle = new HomesickParticle(point, this.texture);
-        //     this.container.addChild(particle.sprite);
-        //     this.particles.push(particle);
-        // });
-
-        const particle = new HomesickParticle(points[1], this.texture);
-        this.container.addChild(particle.sprite);
-        this.particles.push(particle);
+        points.forEach(point => {
+            const particle = new HomesickParticle(point, this.texture);
+            this.container.addChild(particle.sprite);
+            this.particles.push(particle);
+        });
     }
 
     animate(deltaTimeFactor) {
-        this.particles[0].update(this.mouse, deltaTimeFactor);
-        //this.particles.forEach(particle => particle.update(this.mouse, deltaTimeFactor));
+        this.particles.forEach(particle => particle.update(this.mouse, deltaTimeFactor));
     }
 
     pointerMove(e) {
