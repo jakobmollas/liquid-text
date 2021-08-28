@@ -6,7 +6,7 @@
     "dev": "rimraf cache && rimraf dev && md dev && npm run copy-dev-assets && npm run start-dev-server",
     "build": "rimraf docs && md docs && npm run copy-dist-assets && npm run compile-prod",
     "start-dev-server": "parcel src/index.html --dist-dir dev",
-    "compile-prod": "parcel build src/index.html",
+    "compile-prod": "parcel build src/index.html --dist-dir docs",
     "copy-dev-assets": "ncp src/assets dev/assets",
     "copy-dist-assets": "ncp src/assets docs/assets"
   },
