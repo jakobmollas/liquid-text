@@ -12,7 +12,7 @@ export class Simulation {
     }
 
     initialize(text, width, height) {
-        const points = Text.GeneratePoints(text, 6, width, height);
+        const points = Text.GeneratePoints(text, 3, width, height);
 
         this.container = this.createParticleContainer(points.length);
 
