@@ -40,7 +40,6 @@ export class HomesickParticle {
             const mouseToSpriteAngle = Math.atan2(-dy, -dx);
             const xForce = Math.cos(mouseToSpriteAngle) * maxDistance + dx;
             const yForce = Math.sin(mouseToSpriteAngle) * maxDistance + dy;
-            console.log(mouseToSpriteAngle, xForce);
             this.velocityX += xForce;
             this.velocityY += yForce;
         }
