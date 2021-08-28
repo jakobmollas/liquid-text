@@ -1,36 +1,37 @@
 import * as PIXI from "pixi.js";
 
-const FRICTION = 0.80;
-const MOVE_SPEED = 1.0;
+const FRICTION = 0.75; // 0 - inert, 1 no damping at all
+const LIVELINESS = 1.0;
 
-export class Particle {
-    sprite;
+// Particle striving to return to its original position
+export class HomesickParticle {
+    constructor(position, texture) {
+        this.originalX = position.x;
+        this.originalY = position.y;
 
-    constructor(pos, texture) {
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.radius = 10;
+
         this.sprite = new PIXI.Sprite(texture);
         this.sprite.scale.set(0.2);
-        this.savedX = pos.x;
-        this.savedY = pos.y;
-        this.x = pos.x;
-        this.y = pos.y;
-        this.sprite.x = this.x;
-        this.sprite.y = this.y;
-        this.vx = 0;
-        this.vy = 0;
-        this.radius = 10;
+        this.sprite.x = position.x;
+        this.sprite.y = position.y;
     }
 
+    get x() { return this.sprite.x; }
+    get y() { return this.sprite.y; }
+
     draw(deltaTimeFactor) {
-        this.vx += (this.savedX - this.x) * MOVE_SPEED * deltaTimeFactor;
-        this.vy += (this.savedY - this.y) * MOVE_SPEED * deltaTimeFactor;
+        // longer it is from home -> more pull
+        this.velocityX += (this.originalX - this.sprite.x) * LIVELINESS * deltaTimeFactor;
+        this.velocityY += (this.originalY - this.sprite.y) * LIVELINESS * deltaTimeFactor;
 
-        this.vx *= FRICTION;
-        this.vy *= FRICTION;
+        // Gradually slow down to avoid infinite reverberation effects
+        this.velocityX *= FRICTION;
+        this.velocityY *= FRICTION;
 
-        this.x += this.vx;
-        this.y += this.vy;
-
-        this.sprite.x = this.x;
-        this.sprite.y = this.y;
+        this.sprite.x += this.velocityX;
+        this.sprite.y += this.velocityY;
     }
 }

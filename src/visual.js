@@ -1,5 +1,5 @@
 import * as Text from "./text.js";
-import { Particle } from "./particle.js";
+import { HomesickParticle } from "./particle.js";
 import * as PIXI from 'pixi.js';
 
 export class Visual {
@@ -43,7 +43,7 @@ export class Visual {
         // Todo: use foreach?
         this.particles = [];
         for (let i = 0; i < this.pos.length; i++) {
-            const item = new Particle(this.pos[i], this.texture);
+            const item = new HomesickParticle(this.pos[i], this.texture);
             this.container.addChild(item.sprite);
             this.particles.push(item);
         }
@@ -64,8 +64,8 @@ export class Visual {
                 const ty = item.y + Math.sin(angle) * minDist;
                 const ax = tx - this.mouse.x;
                 const ay = ty - this.mouse.y;
-                item.vx -= ax;
-                item.vy -= ay;
+                item.velocityX -= ax;
+                item.velocityY -= ay;
             }
 
             item.draw(deltaTimeFactor);
