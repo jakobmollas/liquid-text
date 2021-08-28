@@ -11,7 +11,7 @@ export class Text {
         const myText = text;
         const fontWidth = 700;
         let fontSize = 800;
-        //const fontName = "Hind";
+        const fontName = "Hind";
         let fontPos;
 
         this.ctx.clearRect(0, 0, stageWidth, stageHeight);
@@ -19,7 +19,7 @@ export class Text {
         this.ctx.textBaseline = "middle";
 
         while (true) {
-            this.ctx.font = `${fontWidth} ${fontSize}px arial`;
+            this.ctx.font = `${fontWidth} ${fontSize}px ${fontName}`;
             fontPos = this.ctx.measureText(myText);
             if (fontPos.width < (stageWidth * 0.9))
                 break;

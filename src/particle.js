@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 
-const FRICTION = 0.55;
+const FRICTION = 0.80;
 const MOVE_SPEED = 1.0;
 
 export class Particle {
