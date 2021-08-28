@@ -1,4 +1,4 @@
-export function TextToPoints(canvas, text, density, stageWidth, stageHeight) {
+export function TextToPoints(canvas, text, pixelsPerPoint, stageWidth, stageHeight) {
     const ctx = canvas.getContext("2d");
 
     canvas.width = stageWidth;
@@ -32,18 +32,17 @@ export function TextToPoints(canvas, text, density, stageWidth, stageHeight) {
         ((stageHeight - fontSize) / 2)
     );
 
-    return createPoints(ctx, density, stageWidth, stageHeight);
+    return createPoints(ctx, pixelsPerPoint);
 }
 
-function createPoints(ctx, pixelsPerPoint, stageWidth, stageHeight) {
-    const imageData = ctx.getImageData(0, 0, stageWidth, stageHeight).data;
-
+function createPoints(ctx, pixelsPerPoint) {
     const points = [];
+    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
 
     // sample image data and create points for pixels with data
-    for (let height = 0; height < stageHeight; height += pixelsPerPoint) {
-        for (let width = 0; width < stageWidth; width += pixelsPerPoint) {
-            const pixelAlpha = imageData[((width + (height * stageWidth)) * 4) - 1];
+    for (let height = 0; height < ctx.canvas.height; height += pixelsPerPoint) {
+        for (let width = 0; width < ctx.canvas.width; width += pixelsPerPoint) {
+            const pixelAlpha = imageData[((width + (height * ctx.canvas.width)) * 4) - 1];
 
             if (pixelAlpha != 0)
                 points.push({ x: width, y: height });
