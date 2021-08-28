@@ -22,10 +22,22 @@ export class Simulation {
         if (this.container)
             stage.removeChild(this.container);
 
-        const points = Text.TextToPoints(text, 6, stageWidth, stageHeight);
+        const points = Text.GeneratePoints(text, 6, stageWidth, stageHeight);
 
-        this.container = new PIXI.ParticleContainer(
-            points.length,
+        this.container = this.createParticleContainer(points.length);
+        stage.addChild(this.container);
+
+        this.particles = [];
+        points.forEach(point => {
+            const particle = new HomesickParticle(point, this.texture);
+            this.container.addChild(particle.sprite);
+            this.particles.push(particle);
+        });
+    }
+
+    createParticleContainer(size) {
+        return new PIXI.ParticleContainer(
+            size,
             {
                 vertices: false,
                 position: true,
@@ -35,15 +47,6 @@ export class Simulation {
                 tint: true
             }
         );
-
-        stage.addChild(this.container);
-
-        this.particles = [];
-        points.forEach(point => {
-            const particle = new HomesickParticle(point, this.texture);
-            this.container.addChild(particle.sprite);
-            this.particles.push(particle);
-        });
     }
 
     animate(deltaTimeFactor) {

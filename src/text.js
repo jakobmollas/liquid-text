@@ -1,7 +1,7 @@
 const fontWidth = 700;
 const fontName = "Hind";
 
-export function TextToPoints(text, pixelsPerPoint, stageWidth, stageHeight) {
+export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
