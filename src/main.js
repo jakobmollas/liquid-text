@@ -1,5 +1,5 @@
 // Todo: try to implement in ts
-import { Visual } from "./visual.js";
+import { Simulation } from "./simulation.js";
 import { GameTime } from "./gametime.js";
 import * as PIXI from 'pixi.js';
 
@@ -19,7 +19,7 @@ class App {
                 families: ['Hind:700']
             },
             fontactive: () => {
-                this.visual = new Visual();
+                this.simulation = new Simulation();
                 this.gameTime = new GameTime();
 
                 window.addEventListener("resize", this.resize.bind(this), false);
@@ -90,14 +90,14 @@ class App {
         this.stageHeight = document.body.clientHeight;
 
         this.renderer.resize(this.stageWidth, this.stageHeight);
-        this.visual.show("J♥H", this.stageWidth, this.stageHeight, this.stage);
+        this.simulation.show("J♥H", this.stageWidth, this.stageHeight, this.stage);
     }
 
     animate() {
         requestAnimationFrame(this.animate.bind(this));
         this.gameTime.update();
 
-        this.visual.animate(this.gameTime.deltaTimeFactor);
+        this.simulation.animate(this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
     }
 }
