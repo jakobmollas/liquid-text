@@ -23,10 +23,7 @@ export class Simulation {
             stage.removeChild(this.container);
         }
 
-        // todo: to local variable?
-        // Todo: pass in from caller
-        const canvas = document.createElement("canvas");
-        this.pos = Text.TextToPoints(canvas, text, 6, stageWidth, stageHeight);
+        this.pos = Text.TextToPoints(text, 6, stageWidth, stageHeight);
 
         this.container = new PIXI.ParticleContainer(
             this.pos.length,
