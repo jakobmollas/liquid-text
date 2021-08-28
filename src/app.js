@@ -81,7 +81,7 @@ class App {
         // This will make particles appear as a liquid surface instead of individual particles/circles
         // Note: Filter order matters here.
         const thresholdFilter = new PIXI.Filter(null, fragSource, uniformsData);
-        this.stage.filters = [blurFilter, thresholdFilter];
+        //this.stage.filters = [blurFilter, thresholdFilter];
         this.stage.filterArea = this.renderer.screen;
     }
 
@@ -90,7 +90,7 @@ class App {
         this.stageHeight = document.body.clientHeight;
 
         this.renderer.resize(this.stageWidth, this.stageHeight);
-        this.simulation.show("J♥H", this.stageWidth, this.stageHeight, this.stage);
+        this.simulation.initialize("J♥H", this.stageWidth, this.stageHeight, this.stage);
     }
 
     animate() {

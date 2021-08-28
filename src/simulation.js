@@ -18,15 +18,14 @@ export class Simulation {
         document.addEventListener("touchend", this.touchEnd.bind(this), false);
     }
 
-    show(text, stageWidth, stageHeight, stage) {
-        if (this.container) {
+    initialize(text, stageWidth, stageHeight, stage) {
+        if (this.container)
             stage.removeChild(this.container);
-        }
 
-        this.pos = Text.TextToPoints(text, 6, stageWidth, stageHeight);
+        const points = Text.TextToPoints(text, 6, stageWidth, stageHeight);
 
         this.container = new PIXI.ParticleContainer(
-            this.pos.length,
+            points.length,
             {
                 vertices: false,
                 position: true,
@@ -39,36 +38,21 @@ export class Simulation {
 
         stage.addChild(this.container);
 
-        // Todo: use foreach?
         this.particles = [];
-        for (let i = 0; i < this.pos.length; i++) {
-            const item = new HomesickParticle(this.pos[i], this.texture);
-            this.container.addChild(item.sprite);
-            this.particles.push(item);
-        }
+        // points.forEach(point => {
+        //     const particle = new HomesickParticle(point, this.texture);
+        //     this.container.addChild(particle.sprite);
+        //     this.particles.push(particle);
+        // });
+
+        const particle = new HomesickParticle(points[1], this.texture);
+        this.container.addChild(particle.sprite);
+        this.particles.push(particle);
     }
 
     animate(deltaTimeFactor) {
-        for (let i = 0; i < this.particles.length; i++) {
-            const item = this.particles[i];
-            const dx = this.mouse.x - item.x;
-            const dy = this.mouse.y - item.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const minDist = item.radius + this.mouse.radius;
-
-            // Apply force to particle based on mouse in relation to particle
-            if (dist < minDist) {
-                const angle = Math.atan2(dy, dx);
-                const tx = item.x + Math.cos(angle) * minDist;
-                const ty = item.y + Math.sin(angle) * minDist;
-                const ax = tx - this.mouse.x;
-                const ay = ty - this.mouse.y;
-                item.velocityX -= ax;
-                item.velocityY -= ay;
-            }
-
-            item.draw(deltaTimeFactor);
-        }
+        this.particles[0].update(this.mouse, deltaTimeFactor);
+        //this.particles.forEach(particle => particle.update(this.mouse, deltaTimeFactor));
     }
 
     pointerMove(e) {
