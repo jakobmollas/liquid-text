@@ -1,0 +1,1 @@
+{"mappings":"AAAA,EAGA,QAAA,CAFA,QAAA,CACA,SAEA,CAEA,UAEA,WAAA,CADA,UAEA","sources":["style.css"],"sourcesContent":["* {\r\n    margin: 0;\r\n    padding: 0;\r\n    border: 0;\r\n}\r\n\r\nhtml, body {\r\n    width: 100%;\r\n    height: 100%;\r\n}"],"names":[],"version":3,"file":"index.18888c1c.css.map"}
