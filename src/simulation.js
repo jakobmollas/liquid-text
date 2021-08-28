@@ -6,6 +6,7 @@ export class Simulation {
     constructor() {
         this.texture = PIXI.Texture.from("./assets/particle.png");
         this.particles = [];
+        this.container;
 
         this.mouse = {
             x: 0,
@@ -35,14 +36,10 @@ export class Simulation {
         this.mouse.y = -1;
     }
 
-    initialize(text, stageWidth, stageHeight, stage) {
-        if (this.container)
-            stage.removeChild(this.container);
-
+    initialize(text, stageWidth, stageHeight) {
         const points = Text.GeneratePoints(text, 6, stageWidth, stageHeight);
 
         this.container = this.createParticleContainer(points.length);
-        stage.addChild(this.container);
 
         this.particles = [];
         points.forEach(point => {

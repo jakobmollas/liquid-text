@@ -13,7 +13,24 @@ class App {
     }
 
     initialize() {
-        this.renderer = new PIXI.Renderer({
+        this.stage = new PIXI.Container();
+        this.renderer = this.createPixiRenderer();
+        document.body.appendChild(this.renderer.view);
+
+        this.initializeShaders(this.stage, this.renderer);
+
+        this.simulation = new Simulation();
+        this.gameTime = new GameTime();
+
+        window.addEventListener("resize", this.resize.bind(this), false);
+        this.resize();
+
+        // Start event loop
+        requestAnimationFrame(this.animate.bind(this));
+    }
+
+    createPixiRenderer() {
+        return new PIXI.Renderer({
             width: document.body.clientWidth,
             height: document.body.clientHeight,
             antialias: true,
@@ -22,14 +39,28 @@ class App {
             powerPreference: "high-performance",
             backgroundColor: 0x000
         });
+    }
 
-        document.body.appendChild(this.renderer.view);
-        this.stage = new PIXI.Container();
+    initializeShaders(stage, renderer) {
+        // Blur images to smear out particles, 
+        // then sharpen image using the threshold filter.
+        // This will make particles appear as a liquid surface instead of individual particles/circles
+        // Note: Filter order matters here.
+        const blurFilter = this.createBlurFilter();
+        const thresholdFilter = this.createThresholdFilter();
+        stage.filters = [blurFilter, thresholdFilter];
+        stage.filterArea = renderer.screen;
+    }
 
-        const blurFilter = new PIXI.filters.BlurFilter();
-        blurFilter.blur = 10;
-        blur.autoFit = true;
+    createBlurFilter() {
+        const filter = new PIXI.filters.BlurFilter();
+        filter.blur = 10;
+        filter.autoFit = true;
 
+        return filter;
+    }
+
+    createThresholdFilter() {
         // pixel shader used to sharpen image (after getting blurred).
         const fragSource = `
             precision mediump float;
@@ -52,6 +83,7 @@ class App {
             }
         `;
 
+        // Create custom data top be passed to the shader
         const uniformsData = {
             threshold: 0.5,
             mr: 255.0 / 255.0,
@@ -59,35 +91,29 @@ class App {
             mb: 0.0 / 255.0
         }
 
-        // Blur images to smear out particles, 
-        // then sharpen image using the threshold filter.
-        // This will make particles appear as a liquid surface instead of individual particles/circles
-        // Note: Filter order matters here.
         const thresholdFilter = new PIXI.Filter(null, fragSource, uniformsData);
-        this.stage.filters = [blurFilter, thresholdFilter];
-        this.stage.filterArea = this.renderer.screen;
-
-        this.simulation = new Simulation();
-        this.gameTime = new GameTime();
-
-        window.addEventListener("resize", this.resize.bind(this), false);
-        this.resize();
-        requestAnimationFrame(this.animate.bind(this));
+        return thresholdFilter;
     }
 
     resize() {
-        this.stageWidth = document.body.clientWidth;
-        this.stageHeight = document.body.clientHeight;
+        const width = document.body.clientWidth;
+        const height = document.body.clientHeight;
 
-        this.renderer.resize(this.stageWidth, this.stageHeight);
-        this.simulation.initialize("J♥H", this.stageWidth, this.stageHeight, this.stage);
+        this.renderer.resize(width, height);
+        this.initializeSimulation(width, height);
+    }
+
+    initializeSimulation(width, height) {
+        this.stage.removeChild(this.simulation.container);
+        this.simulation.initialize("J♥H", width, height);
+        this.stage.addChild(this.simulation.container);
     }
 
     animate() {
-        requestAnimationFrame(this.animate.bind(this));
         this.gameTime.update();
-
         this.simulation.animate(this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
+
+        requestAnimationFrame(this.animate.bind(this));
     }
 }
