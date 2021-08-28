@@ -9,30 +9,27 @@ export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
     canvas.height = stageHeight;
 
     let fontSize = 10;
-    let metrics;
 
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
     // find a good size for the text based on canvas size
     while (true) {
-        ctx.font = `${fontWidth} ${fontSize}px xx`;
-        metrics = ctx.measureText(text);
-        if (metrics.width > (stageWidth * 0.90))
+        ctx.font = `${fontWidth} ${fontSize}px arial`;
+        const m = ctx.measureText(text);
+        const textWidth = m.width;
+        const textHeight = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
+
+        if (textWidth > (stageWidth * 0.8) ||
+            textHeight > (stageHeight * 0.7))
             break;
 
         fontSize *= 1.1;
     }
 
     // write text - the resulting image will be used to calculate points
-    ctx.clearRect(0, 0, stageWidth, stageHeight);
-    ctx.fillText(
-        text,
-        (stageWidth - metrics.width) / 2,
-        metrics.actualBoundingBoxAscent +
-        metrics.actualBoundingBoxDescent +
-        ((stageHeight - fontSize) / 2)
-    );
+    ctx.fillText(text, stageWidth / 2, stageHeight / 2);
 
     return createPointsFromImage(ctx, pixelsPerPoint);
 }
