@@ -11,7 +11,7 @@ export class Text {
         const myText = text;
         const fontWidth = 700;
         let fontSize = 800;
-        const fontName = "Hind";
+        //const fontName = "Hind";
         let fontPos;
 
         this.ctx.clearRect(0, 0, stageWidth, stageHeight);
@@ -19,7 +19,7 @@ export class Text {
         this.ctx.textBaseline = "middle";
 
         while (true) {
-            this.ctx.font = `${fontWidth} ${fontSize}px ${fontName}`;
+            this.ctx.font = `${fontWidth} ${fontSize}px arial`;
             fontPos = this.ctx.measureText(myText);
             if (fontPos.width < (stageWidth * 0.9))
                 break;
@@ -69,9 +69,4 @@ export class Text {
 
         return particles;
     }
-
-    rgb(r, g, b) {
-        return (r << 16) + (g << 8) + b;
-        //return "0x" + ((r << 16) + (g << 8) + b).toString(16);
-    };
 }

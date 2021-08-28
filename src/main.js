@@ -14,19 +14,25 @@ class App {
     }
 
     LoadFonts() {
-        WebFont.load({
-            google: {
-                families: ['Hind:700']
-            },
-            fontactive: () => {
-                this.visual = new Visual();
-                this.gameTime = new GameTime();
+        this.visual = new Visual();
+        this.gameTime = new GameTime();
 
-                window.addEventListener("resize", this.resize.bind(this), false);
-                this.resize();
-                requestAnimationFrame(this.animate.bind(this));
-            }
-        });
+        window.addEventListener("resize", this.resize.bind(this), false);
+        this.resize();
+        requestAnimationFrame(this.animate.bind(this));
+        // WebFont.load({
+        //     google: {
+        //         families: ['Hind:700']
+        //     },
+        //     fontactive: () => {
+        //         this.visual = new Visual();
+        //         this.gameTime = new GameTime();
+
+        //         window.addEventListener("resize", this.resize.bind(this), false);
+        //         this.resize();
+        //         requestAnimationFrame(this.animate.bind(this));
+        //     }
+        // });
     }
 
     setWebgl() {
