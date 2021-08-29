@@ -1,17 +1,17 @@
 # liquid-text
 
-Based on a YouTube tutorial created by Jongmin Kim, found here: https://www.youtube.com/watch?v=HMQ9fEX28fk
+Based on a [YouTube tutorial](https://www.youtube.com/watch?v=HMQ9fEX28fk) created by Jongmin Kim.
 
 Created as an introduction to Pixi.js. 
 Refactored and modified from the original.
 I am planning to port it to TypeScript to explore using Pixi.js via TypeScript.
 
-- Using Pixi.js (via npm) to render via WebGL (via HTML Canvas)
+- Using [PIXI.js](https://pixijs.com/) (via npm) to render via WebGL (via HTML Canvas)
 - Uses shaders for post-processing
-- Uses Parcel to bundle it up and run dev server
-- Mouse/touch to used to interact with the drawing
+- Uses [Parcel](https://parceljs.org/) to bundle it up and run dev server
+- Mouse/touch is used to interact with the drawing
 
-Live: https://jakobmollas.github.io/heart/
+Live: https://jakobmollas.github.io/liquid-text/
 
 ![screenshot](screenshot.png "Screenshot")
 
