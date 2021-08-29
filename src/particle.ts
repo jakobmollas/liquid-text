@@ -1,11 +1,19 @@
 import * as PIXI from "pixi.js";
+import { PointerInput } from "./input";
 
 const FRICTION = 0.9; // 0 - inert, 1 no damping at all
 const LIVELINESS = 0.5;
 
 // Particle striving to return to its original position
 export class HomesickParticle {
-    constructor(position, texture) {
+    private originalX: number;
+    private originalY: number;
+    private velocityX: number;
+    private velocityY: number;
+    private radius: number;
+    private _sprite: PIXI.Sprite;
+
+    constructor(position: { x: number; y: number; }, texture: PIXI.Texture) {
         this.originalX = position.x;
         this.originalY = position.y;
 
@@ -13,26 +21,26 @@ export class HomesickParticle {
         this.velocityY = 0;
         this.radius = 10;
 
-        this.sprite = new PIXI.Sprite(texture);
-        this.sprite.scale.set(0.2);
-        this.sprite.x = position.x;
-        this.sprite.y = position.y;
+        this._sprite = new PIXI.Sprite(texture);
+        this._sprite.scale.set(0.2);
+        this._sprite.x = position.x;
+        this._sprite.y = position.y;
     }
 
-    get x() { return this.sprite.x; }
-    get y() { return this.sprite.y; }
+    get x(): number { return this._sprite.x; }
+    get y(): number { return this._sprite.y; }
+    get sprite(): PIXI.Sprite { return this._sprite; }
 
-    update(mouse, deltaTimeFactor) {
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
+    update(input: PointerInput, deltaTimeFactor: number): void {
+        const dx = input.x - this.x;
+        const dy = input.y - this.y;
         const mouseToSpriteDistance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = this.radius + mouse.radius;
+        const maxDistance = this.radius + input.radius;
 
         // Apply force to particle based on mouse in relation 
         // to particle as long as mouse is close enough.
         // Closer = more force
         if (mouseToSpriteDistance < maxDistance) {
-
             // Calculate angle from mouse -> sprite
             // Force is per axis; 
             //     0 (distance = maxDistance) -> 
@@ -45,14 +53,14 @@ export class HomesickParticle {
         }
 
         // the longer it is from home -> more pull
-        this.velocityX += (this.originalX - this.sprite.x) * LIVELINESS * deltaTimeFactor;
-        this.velocityY += (this.originalY - this.sprite.y) * LIVELINESS * deltaTimeFactor;
+        this.velocityX += (this.originalX - this._sprite.x) * LIVELINESS * deltaTimeFactor;
+        this.velocityY += (this.originalY - this._sprite.y) * LIVELINESS * deltaTimeFactor;
 
         // Gradually slow down to avoid infinite reverberation effects
         this.velocityX *= FRICTION;
         this.velocityY *= FRICTION;
 
-        this.sprite.x += this.velocityX;
-        this.sprite.y += this.velocityY;
+        this._sprite.x += this.velocityX;
+        this._sprite.y += this.velocityY;
     }
 }

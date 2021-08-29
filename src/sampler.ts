@@ -1,6 +1,10 @@
-export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
+export function GeneratePoints(
+    text: string,
+    pixelsPerPoint: number,
+    stageWidth: number,
+    stageHeight: number) {
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     canvas.width = stageWidth;
     canvas.height = stageHeight;
@@ -31,7 +35,7 @@ export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
     return createPointsFromImage(ctx, pixelsPerPoint);
 }
 
-function createPointsFromImage(ctx, pixelsPerPoint) {
+function createPointsFromImage(ctx: CanvasRenderingContext2D, pixelsPerPoint: number): { x: number, y: number }[] {
     const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
 
     // sample image data and create points for pixels with data

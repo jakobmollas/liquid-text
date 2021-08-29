@@ -1,8 +1,8 @@
 // Todo: try to implement in ts
-import { Simulation } from "./simulation.js";
-import { Input } from "./input.js";
-import { GameTime } from "./gametime.js";
-import * as Shaders from "./shaders.js";
+import { Simulation } from "./simulation";
+import { Input } from "./input";
+import { GameTime } from "./gametime";
+import * as Shaders from "./shaders";
 import * as PIXI from 'pixi.js';
 
 window.onload = () => {
@@ -10,21 +10,21 @@ window.onload = () => {
 }
 
 class App {
+    message: string = "YUM";
+    input: Input = new Input();
+    gameTime: GameTime = new GameTime();
+    stage: PIXI.Container = new PIXI.Container();
+    renderer: PIXI.Renderer;
+    simulation: Simulation;
+
     constructor() {
-        this.message = "YUM";
-        this.initialize();
-    }
-
-    initialize() {
-        this.input = new Input();
-        this.gameTime = new GameTime();
-
-        this.stage = new PIXI.Container();
         this.renderer = this.createPixiRenderer();
         this.addCanvasToDocument(this.renderer.view);
 
+        this.simulation = new Simulation(this.message, document.body.clientWidth, document.body.clientHeight)
+        this.stage.addChild(this.simulation.container);
+
         this.initializeShaders(this.stage, this.renderer);
-        this.createSimulation(document.body.clientWidth, document.body.clientHeight);
 
         window.addEventListener("resize", this.resize.bind(this), false);
 
@@ -42,11 +42,11 @@ class App {
         });
     }
 
-    addCanvasToDocument(canvas) {
+    addCanvasToDocument(canvas: HTMLCanvasElement) {
         document.body.appendChild(canvas);
     }
 
-    initializeShaders(stage, renderer) {
+    initializeShaders(stage: PIXI.Container, renderer: PIXI.Renderer) {
         // Blur images to smear out particles, 
         // then sharpen image using the threshold filter.
         // This will make particles appear as a liquid surface instead of individual particles/circles
@@ -63,14 +63,14 @@ class App {
         const height = document.body.clientHeight;
 
         this.resizeRenderer(width, height);
-        this.createSimulation(width, height);
+        this.resetSimulation(width, height);
     }
 
-    resizeRenderer(width, height) {
+    resizeRenderer(width: number, height: number) {
         this.renderer.resize(width, height);
     }
 
-    createSimulation(width, height) {
+    resetSimulation(width: number, height: number) {
         if (this.simulation)
             this.stage.removeChild(this.simulation.container);
 
@@ -80,7 +80,7 @@ class App {
 
     animate() {
         this.gameTime.update();
-        this.simulation.animate(this.input.mouse, this.gameTime.deltaTimeFactor);
+        this.simulation?.animate(this.input.data, this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
 
         requestAnimationFrame(this.animate.bind(this));
