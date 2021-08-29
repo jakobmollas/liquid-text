@@ -1,6 +1,3 @@
-const fontWidth = 700;
-const fontName = "Hind";
-
 export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -16,7 +13,7 @@ export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
 
     // find a good size for the text based on canvas size
     while (true) {
-        ctx.font = `${fontWidth} ${fontSize}px arial`;
+        ctx.font = `700 ${fontSize}px arial`;
         const m = ctx.measureText(text);
         const textWidth = m.width;
         const textHeight = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
