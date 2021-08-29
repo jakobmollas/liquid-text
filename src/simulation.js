@@ -1,4 +1,4 @@
-import * as Text from "./text.js";
+import * as Sampler from "./sampler.js";
 import { HomesickParticle } from "./particle.js";
 import * as PIXI from 'pixi.js';
 
@@ -12,7 +12,7 @@ export class Simulation {
     }
 
     initialize(text, width, height) {
-        const points = Text.GeneratePoints(text, 3, width, height);
+        const points = Sampler.GeneratePoints(text, 3, width, height);
 
         this.container = this.createParticleContainer(points.length);
 
