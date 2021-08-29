@@ -1,6 +1,12 @@
-export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
+import { Point } from "pixi.js";
+
+export function GeneratePoints(
+    text: string,
+    pixelsPerPoint: number,
+    stageWidth: number,
+    stageHeight: number): Point[] {
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     canvas.width = stageWidth;
     canvas.height = stageHeight;
@@ -31,7 +37,7 @@ export function GeneratePoints(text, pixelsPerPoint, stageWidth, stageHeight) {
     return createPointsFromImage(ctx, pixelsPerPoint);
 }
 
-function createPointsFromImage(ctx, pixelsPerPoint) {
+function createPointsFromImage(ctx: CanvasRenderingContext2D, pixelsPerPoint: number): Point[] {
     const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
 
     // sample image data and create points for pixels with data
@@ -41,7 +47,7 @@ function createPointsFromImage(ctx, pixelsPerPoint) {
             const pixelAlpha = imageData[((width + (height * ctx.canvas.width)) * 4) - 1];
 
             if (pixelAlpha != 0)
-                points.push({ x: width, y: height });
+                points.push(new Point(width, height));
         }
     }
 

@@ -1,19 +1,19 @@
 export class GameTime {
-    _deltaTime = 0;
-    _deltaTimeFactor = 0;
-    _lastTimestamp = 0;
+    private _deltaTime: number = 0;
+    private _deltaTimeFactor: number = 0;
+    private _lastTimestamp: number = 0;
 
     update() {
         this._deltaTime = this._lastTimestamp ? performance.now() - this._lastTimestamp : 0;
         this._lastTimestamp = performance.now();
-        this._deltaTimeFactor = this._deltaTime / 1000;
+        this._deltaTimeFactor = this.deltaTime / 1000;
     }
 
-    get deltaTime() {
+    get deltaTime(): number {
         return this._deltaTime;
     }
 
-    get deltaTimeFactor() {
+    get deltaTimeFactor(): number {
         return this._deltaTimeFactor;
     }
 }

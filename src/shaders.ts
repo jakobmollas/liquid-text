@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as Filters from 'pixi-filters';
 
-export function createBlurFilter() {
+export function createBlurFilter(): PIXI.Filter {
     const filter = new PIXI.filters.BlurFilter();
     filter.blur = 10;
     filter.autoFit = true;
@@ -9,14 +9,14 @@ export function createBlurFilter() {
     return filter;
 }
 
-export function createBloomFilter() {
+export function createBloomFilter(): PIXI.Filter {
     const filter = new Filters.BloomFilter();
     filter.blur = 20;
 
     return filter;
 }
 
-export function createThresholdColorizerFilter() {
+export function createThresholdColorizerFilter(): PIXI.Filter {
     // pixel shader used to sharpen and colorize image (after getting blurred).
     const fragSource = `
             precision mediump float;
@@ -45,6 +45,6 @@ export function createThresholdColorizerFilter() {
         mb: 0.0 / 255.0
     }
 
-    const thresholdFilter = new PIXI.Filter(null, fragSource, uniformsData);
+    const thresholdFilter = new PIXI.Filter("", fragSource, uniformsData);
     return thresholdFilter;
 }
