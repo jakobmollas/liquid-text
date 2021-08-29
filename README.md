@@ -6,7 +6,7 @@ Created as an introduction to Pixi.js and using TypeScript with a third party li
 Unfortunately Parcel does not use the TypeScript compiler but merely strips TypeScript annotations without checking types or transpile in any way.
 Maybe there is a way to do that in the future but for now the added support available in the IDE is valuable.
 
-__Note:__ Since no TypeScript compilation is done, more advanced TS features like [Parameter Properties](https://www.typescriptlang.org/docs/handbook/2/classes.html#parameter-properties) cannot be used.
+⚠️ Since no TypeScript compilation is done, more advanced TS features like [Parameter Properties](https://www.typescriptlang.org/docs/handbook/2/classes.html#parameter-properties) cannot be used.
 
 - Using [PIXI.js](https://pixijs.com/) (via npm) to render via WebGL (via HTML Canvas)
 - Uses shaders for post-processing
