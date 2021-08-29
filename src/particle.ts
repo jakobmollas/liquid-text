@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { Point } from "pixi.js";
 import { PointerInput } from "./input";
 
 const FRICTION = 0.9; // 0 - inert, 1 no damping at all
@@ -6,19 +7,15 @@ const LIVELINESS = 0.5;
 
 // Particle striving to return to its original position
 export class HomesickParticle {
-    private originalX: number;
-    private originalY: number;
-    private velocityX: number;
-    private velocityY: number;
+    private home: Point;
+    private velocity: Point;
     private radius: number;
     private _sprite: PIXI.Sprite;
 
-    constructor(position: { x: number; y: number; }, texture: PIXI.Texture) {
-        this.originalX = position.x;
-        this.originalY = position.y;
+    constructor(position: Point, texture: PIXI.Texture) {
+        this.home = position.clone();
 
-        this.velocityX = 0;
-        this.velocityY = 0;
+        this.velocity = new Point();
         this.radius = 10;
 
         this._sprite = new PIXI.Sprite(texture);
@@ -48,19 +45,19 @@ export class HomesickParticle {
             const mouseToSpriteAngle = Math.atan2(-dy, -dx);
             const xForce = Math.cos(mouseToSpriteAngle) * maxDistance + dx;
             const yForce = Math.sin(mouseToSpriteAngle) * maxDistance + dy;
-            this.velocityX += xForce;
-            this.velocityY += yForce;
+            this.velocity.x += xForce;
+            this.velocity.y += yForce;
         }
 
         // the longer it is from home -> more pull
-        this.velocityX += (this.originalX - this._sprite.x) * LIVELINESS * deltaTimeFactor;
-        this.velocityY += (this.originalY - this._sprite.y) * LIVELINESS * deltaTimeFactor;
+        this.velocity.x += (this.home.x - this._sprite.x) * LIVELINESS * deltaTimeFactor;
+        this.velocity.y += (this.home.y - this._sprite.y) * LIVELINESS * deltaTimeFactor;
 
         // Gradually slow down to avoid infinite reverberation effects
-        this.velocityX *= FRICTION;
-        this.velocityY *= FRICTION;
+        this.velocity.x *= FRICTION;
+        this.velocity.y *= FRICTION;
 
-        this._sprite.x += this.velocityX;
-        this._sprite.y += this.velocityY;
+        this._sprite.x += this.velocity.x;
+        this._sprite.y += this.velocity.y;
     }
 }

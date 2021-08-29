@@ -2,36 +2,33 @@ import * as Sampler from "./sampler";
 import { HomesickParticle } from "./particle";
 import * as PIXI from 'pixi.js';
 import { PointerInput } from "./input";
+import { ParticleContainer } from "pixi.js";
 
 export class Simulation {
-    texture: PIXI.Texture<PIXI.Resource>;
     particles: HomesickParticle[];
-    container: any;
+    container: ParticleContainer;
 
     constructor(text: string, width: number, height: number) {
-        this.texture = PIXI.Texture.from("./assets/particle.png");
-        this.particles = [];
-        this.container;
-
-        this.initialize(text, width, height);
+        this.particles = this.createParticles(text, width, height);
+        this.container = this.createParticleContainer(this.particles,);
     }
 
-    initialize(text: string, width: number, height: number) {
+    private createParticles(text: string, width: number, height: number): HomesickParticle[] {
         const points = Sampler.GeneratePoints(text, 3, width, height);
+        const texture = PIXI.Texture.from("./assets/particle.png");
 
-        this.container = this.createParticleContainer(points.length);
-
-        this.particles = [];
+        const particles = new Array<HomesickParticle>();
         points.forEach(point => {
-            const particle = new HomesickParticle(point, this.texture);
-            this.container.addChild(particle.sprite);
-            this.particles.push(particle);
+            const particle = new HomesickParticle(point, texture);
+            particles.push(particle);
         });
+
+        return particles;
     }
 
-    private createParticleContainer(size: number): PIXI.ParticleContainer {
-        return new PIXI.ParticleContainer(
-            size,
+    private createParticleContainer(particles: any[]): ParticleContainer {
+        const container = new PIXI.ParticleContainer(
+            particles.length,
             {
                 vertices: false,
                 position: true,
@@ -41,6 +38,12 @@ export class Simulation {
                 tint: true
             }
         );
+
+        particles.forEach(particle => {
+            container.addChild(particle.sprite);
+        });
+
+        return container;
     }
 
     animate(input: PointerInput, deltaTimeFactor: number): void {
