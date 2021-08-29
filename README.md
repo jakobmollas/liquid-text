@@ -2,9 +2,11 @@
 
 Based on a [YouTube tutorial](https://www.youtube.com/watch?v=HMQ9fEX28fk) created by Jongmin Kim.
 
-Created as an introduction to Pixi.js. 
-Refactored and modified from the original.
-I am planning to port it to TypeScript to explore using Pixi.js via TypeScript.
+Created as an introduction to Pixi.js and using TypeScript with a third party library (including type defs). 
+Unfortunately Parcel does not use the TypeScript compiler but merely strips TypeScript annotations without checking types or transpile in any way.
+Maybe there is a way to do that in the future but for now the added support available in the IDE is valuable.
+
+Note: Since no TypeScript compilation is done, more advanced TS features like [Parameter Properties](https://www.typescriptlang.org/docs/handbook/2/classes.html#parameter-properties) cannot be used.
 
 - Using [PIXI.js](https://pixijs.com/) (via npm) to render via WebGL (via HTML Canvas)
 - Uses shaders for post-processing
