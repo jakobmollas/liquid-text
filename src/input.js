@@ -3,7 +3,7 @@ export class Input {
         this.mouse = {
             x: 0,
             y: 0,
-            radius: 100
+            radius: 100 / (window.devicePixelRatio ?? 1)
         };
 
         document.addEventListener("pointermove", this.pointerMove.bind(this), false);

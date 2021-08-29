@@ -11,6 +11,7 @@ window.onload = () => {
 
 class App {
     constructor() {
+        this.message = "YUM";
         this.initialize();
     }
 
@@ -20,10 +21,10 @@ class App {
 
         this.stage = new PIXI.Container();
         this.renderer = this.createPixiRenderer();
-        this.initializeShaders(this.stage, this.renderer);
         this.addCanvasToDocument(this.renderer.view);
 
-        this.createSimulation(this.renderer.width, this.renderer.height);
+        this.initializeShaders(this.stage, this.renderer);
+        this.createSimulation(document.body.clientWidth, document.body.clientHeight);
 
         window.addEventListener("resize", this.resize.bind(this), false);
 
@@ -35,8 +36,6 @@ class App {
         return new PIXI.Renderer({
             width: document.body.clientWidth,
             height: document.body.clientHeight,
-            antialias: true,
-            resolution: (window.devicePixelRatio > 1) ? 2 : 1,
             autoDensity: true,
             powerPreference: "high-performance",
             backgroundColor: 0x000
@@ -75,7 +74,7 @@ class App {
         if (this.simulation)
             this.stage.removeChild(this.simulation.container);
 
-        this.simulation = new Simulation("J♥H", width, height);
+        this.simulation = new Simulation(this.message, width, height);
         this.stage.addChild(this.simulation.container);
     }
 

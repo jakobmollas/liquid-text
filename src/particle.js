@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 
-const FRICTION = 0.75; // 0 - inert, 1 no damping at all
-const LIVELINESS = 1.0;
+const FRICTION = 0.9; // 0 - inert, 1 no damping at all
+const LIVELINESS = 0.5;
 
 // Particle striving to return to its original position
 export class HomesickParticle {
