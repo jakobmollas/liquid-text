@@ -1,17 +1,14 @@
 {
-  "name": "pixi-test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "liquid-text",
+  "source": "index.html",
   "scripts": {
     "dev": "rimraf cache && rimraf dev && md dev && npm run copy-dev-assets && npm run start-dev-server",
     "build": "rimraf docs && md docs && npm run copy-dist-assets && npm run compile-prod",
-    "start-dev-server": "parcel index.html --dist-dir dev",
-    "compile-prod": "parcel build index.html --dist-dir docs",
+    "start-dev-server": "parcel --dist-dir dev",
+    "compile-prod": "parcel build --dist-dir docs",
     "copy-dev-assets": "ncp src/assets dev/assets",
     "copy-dist-assets": "ncp src/assets docs/assets"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "pixi-filters": "^4.1.4",
