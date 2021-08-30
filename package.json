@@ -11,10 +11,12 @@
   },
   "license": "ISC",
   "dependencies": {
+    "dat.gui": "^0.7.7",
     "pixi-filters": "^4.1.4",
     "pixi.js": "^6.1.2"
   },
   "devDependencies": {
+    "@types/dat.gui": "^0.7.7",
     "ncp": "^2.0.0",
     "rimraf": "^3.0.2"
   }

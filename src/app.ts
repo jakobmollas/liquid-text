@@ -1,35 +1,58 @@
-// Todo: try to implement in ts
 import { Simulation } from "./simulation";
 import { Input } from "./input";
 import { GameTime } from "./gametime";
+import { Settings } from "./settings";
 import * as Shaders from "./shaders";
 import * as PIXI from 'pixi.js';
+import * as dat from 'dat.gui';
+
+// Todo: Move input directly to simulation? it is not needed by app
+// Todo: add diagnostics (fps etc)
+// Todo: implement reset of simulation when text/density changes
 
 window.onload = () => {
+    globalThis.settings = new Settings();
     new App();
 }
 
 class App {
-    message: string = "YUM";
     input: Input = new Input();
     gameTime: GameTime = new GameTime();
     stage: PIXI.Container = new PIXI.Container();
+    gui: dat.GUI = new dat.GUI();
     renderer: PIXI.Renderer;
     simulation: Simulation;
 
     constructor() {
+        globalThis.settings = new Settings();
+
         this.renderer = this.createPixiRenderer();
         this.addCanvasToDocument(this.renderer.view);
 
-        this.simulation = new Simulation(this.message, document.body.clientWidth, document.body.clientHeight)
+        this.simulation = new Simulation(settings.text, document.body.clientWidth, document.body.clientHeight)
         this.stage.addChild(this.simulation.container);
 
         this.initializeShaders(this.stage, this.renderer);
+        this.initializeGuiControls(this.gui, settings);
 
         window.addEventListener("resize", this.resize.bind(this), false);
 
-        // Start event loop
         requestAnimationFrame(this.animate.bind(this));
+    }
+
+    initializeGuiControls(gui: dat.GUI, settings: Settings) {
+        gui.add(settings, 'animate');
+        gui.add(settings, 'showDiagnostics');
+        gui.add(settings, 'viscosity', 0, 1.0);
+        gui.add(settings, 'liveliness', 0, 5.0);
+        gui.add(settings, 'pointerRadius', 1, 300);
+        gui.add(settings, 'density', 1, 10).onFinishChange(() => this.settingsChanged());;
+        gui.add(settings, 'text').onFinishChange(() => this.settingsChanged());
+        gui.close();
+    }
+
+    settingsChanged() {
+        console.log("changed");
     }
 
     createPixiRenderer() {
@@ -74,13 +97,13 @@ class App {
         if (this.simulation)
             this.stage.removeChild(this.simulation.container);
 
-        this.simulation = new Simulation(this.message, width, height);
+        this.simulation = new Simulation(globalThis.settings.text, width, height);
         this.stage.addChild(this.simulation.container);
     }
 
     animate() {
         this.gameTime.update();
-        this.simulation?.animate(this.input.data, this.gameTime.deltaTimeFactor);
+        this.simulation?.animate(this.input, this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
 
         requestAnimationFrame(this.animate.bind(this));

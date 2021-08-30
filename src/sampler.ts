@@ -1,4 +1,4 @@
-import { Point } from "pixi.js";
+import { Point } from "./point";
 
 export function GeneratePoints(
     text: string,

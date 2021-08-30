@@ -1,12 +1,11 @@
 import * as Sampler from "./sampler";
 import { HomesickParticle } from "./particle";
 import * as PIXI from 'pixi.js';
-import { PointerInput } from "./input";
-import { ParticleContainer } from "pixi.js";
+import { Input } from "./input";
 
 export class Simulation {
     particles: HomesickParticle[];
-    container: ParticleContainer;
+    container: PIXI.ParticleContainer;
 
     constructor(text: string, width: number, height: number) {
         this.particles = this.createParticles(text, width, height);
@@ -26,7 +25,7 @@ export class Simulation {
         return particles;
     }
 
-    private createParticleContainer(particles: any[]): ParticleContainer {
+    private createParticleContainer(particles: any[]): PIXI.ParticleContainer {
         const container = new PIXI.ParticleContainer(
             particles.length,
             {
@@ -46,7 +45,7 @@ export class Simulation {
         return container;
     }
 
-    animate(input: PointerInput, deltaTimeFactor: number): void {
+    animate(input: Input, deltaTimeFactor: number): void {
         this.particles.forEach(particle => particle.update(input, deltaTimeFactor));
     }
 }
