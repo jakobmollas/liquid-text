@@ -7,7 +7,6 @@ import * as PIXI from 'pixi.js';
 import * as dat from 'dat.gui';
 
 // Todo: Move input directly to simulation? it is not needed by app
-// Todo: add diagnostics (fps etc)
 // Todo: implement reset of simulation when text/density changes
 
 window.onload = () => {
@@ -22,9 +21,11 @@ class App {
     gui: dat.GUI = new dat.GUI();
     renderer: PIXI.Renderer;
     simulation: Simulation;
+    stats: HTMLElement;
 
     constructor() {
         globalThis.settings = new Settings();
+        this.stats = document.getElementById("stats") as HTMLElement;
 
         this.renderer = this.createPixiRenderer();
         this.addCanvasToDocument(this.renderer.view);
@@ -106,6 +107,13 @@ class App {
         this.simulation?.animate(this.input, this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
 
+        if (globalThis.settings.showDiagnostics)
+            this.drawStats();
+
         requestAnimationFrame(this.animate.bind(this));
+    }
+
+    drawStats() {
+        this.stats.innerText = `FPS: ${this.gameTime.fps.toFixed(0)} (${this.simulation.particleCount} particles)`;
     }
 }

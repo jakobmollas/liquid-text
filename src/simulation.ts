@@ -9,8 +9,10 @@ export class Simulation {
 
     constructor(text: string, width: number, height: number) {
         this.particles = this.createParticles(text, width, height);
-        this.container = this.createParticleContainer(this.particles,);
+        this.container = this.createParticleContainer(this.particles);
     }
+
+    get particleCount(): number { return this.particles?.length };
 
     private createParticles(text: string, width: number, height: number): HomesickParticle[] {
         const points = Sampler.GeneratePoints(text, 3, width, height);
