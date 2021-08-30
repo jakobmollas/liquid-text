@@ -6,7 +6,6 @@ import * as Shaders from "./shaders";
 import * as PIXI from 'pixi.js';
 import * as dat from 'dat.gui';
 
-// Todo: Move input directly to simulation? it is not needed by app
 // Todo: implement reset of simulation when text/density changes
 
 window.onload = () => {
@@ -42,7 +41,6 @@ class App {
     }
 
     initializeGuiControls(gui: dat.GUI, settings: Settings) {
-        gui.add(settings, 'animate');
         gui.add(settings, 'showDiagnostics');
         gui.add(settings, 'viscosity', 0, 1.0);
         gui.add(settings, 'liveliness', 0, 5.0);
@@ -104,7 +102,7 @@ class App {
 
     animate() {
         this.gameTime.update();
-        this.simulation?.animate(this.input, this.gameTime.deltaTimeFactor);
+        this.simulation.animate(this.input, this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
 
         if (globalThis.settings.showDiagnostics)
