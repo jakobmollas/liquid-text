@@ -26,27 +26,20 @@ export class HomesickParticle {
     get sprite(): PIXI.Sprite { return this._sprite; }
 
     update(input: Input, deltaTimeFactor: number): void {
-        this.velocity = updateVelocityFromInput(input, this._sprite, this.radius, this.velocity);
-
-        // the longer it is from home -> more pull
-        this.velocity.x += (this.home.x - this._sprite.x) * globalThis.settings.liveliness * deltaTimeFactor;
-        this.velocity.y += (this.home.y - this._sprite.y) * globalThis.settings.liveliness * deltaTimeFactor;
-
-        // Gradually slow down to avoid infinite reverberation effects
-        this.velocity.x *= globalThis.settings.viscosity;
-        this.velocity.y *= globalThis.settings.viscosity;
+        updateVelocityFromInput(input, this._sprite, this.radius, this.velocity);
+        updateVelocityFromHomePosition(this.home, this._sprite, this.velocity, deltaTimeFactor);
 
         this._sprite.x += this.velocity.x;
         this._sprite.y += this.velocity.y;
     }
 }
 
-function updateVelocityFromInput(input: Input, position: Point, radius: number, velocity: Point): Point {
+function updateVelocityFromInput(input: Input, currentPos: Point, radius: number, velocity: Point): void {
     if (!input.isActive)
-        return velocity;
+        return;
 
-    const dx = input.x - position.x;
-    const dy = input.y - position.y;
+    const dx = input.x - currentPos.x;
+    const dy = input.y - currentPos.y;
     const mouseToSpriteDistance = Math.sqrt(dx * dx + dy * dy);
     const maxDistance = radius + globalThis.settings.pointerRadius;
 
@@ -54,7 +47,7 @@ function updateVelocityFromInput(input: Input, position: Point, radius: number, 
     // to particle as long as mouse is close enough.
     // Closer = more force
     if (mouseToSpriteDistance > maxDistance)
-        return velocity;
+        return;
 
     // Calculate angle from mouse -> sprite
     // Force is per axis; 
@@ -64,5 +57,16 @@ function updateVelocityFromInput(input: Input, position: Point, radius: number, 
     const xForce = Math.cos(mouseToSpriteAngle) * maxDistance + dx;
     const yForce = Math.sin(mouseToSpriteAngle) * maxDistance + dy;
 
-    return new Point(velocity.x + xForce, velocity.y + yForce);
+    velocity.x += xForce;
+    velocity.y += yForce;
+}
+
+function updateVelocityFromHomePosition(homePos: Point, currentPos: Point, velocity: Point, deltaTimeFactor: number) {
+    // the longer it is from home -> more pull
+    velocity.x += (homePos.x - currentPos.x) * globalThis.settings.liveliness * deltaTimeFactor;
+    velocity.y += (homePos.y - currentPos.y) * globalThis.settings.liveliness * deltaTimeFactor;
+
+    // Gradually slow down to avoid infinite reverberation effects
+    velocity.x *= globalThis.settings.viscosity;
+    velocity.y *= globalThis.settings.viscosity;
 }
