@@ -1,5 +1,4 @@
 export class Settings {
-    animate: boolean = true;
     showDiagnostics: boolean = false;
     density: number = 3;
     text: string = "YUM";

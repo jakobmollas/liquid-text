@@ -41,7 +41,7 @@ function updateVelocityFromInput(input: Input, currentPos: Point, radius: number
     const dx = input.x - currentPos.x;
     const dy = input.y - currentPos.y;
     const mouseToSpriteDistance = Math.sqrt(dx * dx + dy * dy);
-    const maxDistance = radius + globalThis.settings.pointerRadius;
+    const maxDistance = radius + settings.pointerRadius;
 
     // Apply force to particle based on mouse in relation 
     // to particle as long as mouse is close enough.
@@ -63,10 +63,10 @@ function updateVelocityFromInput(input: Input, currentPos: Point, radius: number
 
 function updateVelocityFromHomePosition(homePos: Point, currentPos: Point, velocity: Point, deltaTimeFactor: number) {
     // the longer it is from home -> more pull
-    velocity.x += (homePos.x - currentPos.x) * globalThis.settings.liveliness * deltaTimeFactor;
-    velocity.y += (homePos.y - currentPos.y) * globalThis.settings.liveliness * deltaTimeFactor;
+    velocity.x += (homePos.x - currentPos.x) * settings.liveliness * deltaTimeFactor;
+    velocity.y += (homePos.y - currentPos.y) * settings.liveliness * deltaTimeFactor;
 
     // Gradually slow down to avoid infinite reverberation effects
-    velocity.x *= globalThis.settings.viscosity;
-    velocity.y *= globalThis.settings.viscosity;
+    velocity.x *= settings.viscosity;
+    velocity.y *= settings.viscosity;
 }

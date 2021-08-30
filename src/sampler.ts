@@ -3,13 +3,16 @@ import { Point } from "./point";
 export function GeneratePoints(
     text: string,
     pixelsPerPoint: number,
-    stageWidth: number,
-    stageHeight: number): Point[] {
+    width: number,
+    height: number): Point[] {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-    canvas.width = stageWidth;
-    canvas.height = stageHeight;
+    pixelsPerPoint = pixelsPerPoint < 1 ? 1 : pixelsPerPoint;
+    pixelsPerPoint = Math.floor(pixelsPerPoint);
+
+    canvas.width = width;
+    canvas.height = height;
 
     let fontSize = 10;
 
@@ -24,15 +27,15 @@ export function GeneratePoints(
         const textWidth = m.width;
         const textHeight = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
 
-        if (textWidth > (stageWidth * 0.8) ||
-            textHeight > (stageHeight * 0.7))
+        if (textWidth > (width * 0.8) ||
+            textHeight > (height * 0.7))
             break;
 
         fontSize *= 1.1;
     }
 
     // write text - the resulting image will be used to calculate points
-    ctx.fillText(text, stageWidth / 2, stageHeight / 2);
+    ctx.fillText(text, width / 2, height / 2);
 
     return createPointsFromImage(ctx, pixelsPerPoint);
 }

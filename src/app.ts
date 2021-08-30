@@ -6,8 +6,6 @@ import * as Shaders from "./shaders";
 import * as PIXI from 'pixi.js';
 import * as dat from 'dat.gui';
 
-// Todo: implement reset of simulation when text/density changes
-
 window.onload = () => {
     globalThis.settings = new Settings();
     new App();
@@ -23,13 +21,13 @@ class App {
     stats: HTMLElement;
 
     constructor() {
-        globalThis.settings = new Settings();
+        settings = new Settings();
         this.stats = document.getElementById("stats") as HTMLElement;
 
         this.renderer = this.createPixiRenderer();
         this.addCanvasToDocument(this.renderer.view);
 
-        this.simulation = new Simulation(settings.text, document.body.clientWidth, document.body.clientHeight)
+        this.simulation = this.createSimulation();
         this.stage.addChild(this.simulation.container);
 
         this.initializeShaders(this.stage, this.renderer);
@@ -45,13 +43,13 @@ class App {
         gui.add(settings, 'viscosity', 0, 1.0);
         gui.add(settings, 'liveliness', 0, 5.0);
         gui.add(settings, 'pointerRadius', 1, 300);
-        gui.add(settings, 'density', 1, 10).onFinishChange(() => this.settingsChanged());;
+        gui.add(settings, 'density', 1, 10).step(1).onFinishChange(() => this.settingsChanged());;
         gui.add(settings, 'text').onFinishChange(() => this.settingsChanged());
         gui.close();
     }
 
     settingsChanged() {
-        console.log("changed");
+        this.resetSimulation();
     }
 
     createPixiRenderer() {
@@ -81,23 +79,28 @@ class App {
     }
 
     resize() {
-        const width = document.body.clientWidth;
-        const height = document.body.clientHeight;
-
-        this.resizeRenderer(width, height);
-        this.resetSimulation(width, height);
+        this.resizeRendererToClientSize();
+        this.resetSimulation();
     }
 
-    resizeRenderer(width: number, height: number) {
-        this.renderer.resize(width, height);
+    resizeRendererToClientSize() {
+        this.renderer.resize(document.body.clientWidth, document.body.clientHeight);
     }
 
-    resetSimulation(width: number, height: number) {
+    resetSimulation() {
         if (this.simulation)
             this.stage.removeChild(this.simulation.container);
 
-        this.simulation = new Simulation(globalThis.settings.text, width, height);
+        this.simulation = this.createSimulation();
         this.stage.addChild(this.simulation.container);
+    }
+
+    createSimulation(): Simulation {
+        return new Simulation(
+            settings.text,
+            settings.density,
+            document.body.clientWidth,
+            document.body.clientHeight)
     }
 
     animate() {
@@ -105,7 +108,7 @@ class App {
         this.simulation.animate(this.input, this.gameTime.deltaTimeFactor);
         this.renderer.render(this.stage);
 
-        if (globalThis.settings.showDiagnostics)
+        if (settings.showDiagnostics)
             this.drawStats();
 
         requestAnimationFrame(this.animate.bind(this));

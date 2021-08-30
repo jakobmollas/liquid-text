@@ -7,15 +7,15 @@ export class Simulation {
     particles: HomesickParticle[];
     container: PIXI.ParticleContainer;
 
-    constructor(text: string, width: number, height: number) {
-        this.particles = this.createParticles(text, width, height);
+    constructor(text: string, density: number, width: number, height: number) {
+        this.particles = this.createParticles(text, density, width, height);
         this.container = this.createParticleContainer(this.particles);
     }
 
     get particleCount(): number { return this.particles?.length };
 
-    private createParticles(text: string, width: number, height: number): HomesickParticle[] {
-        const points = Sampler.GeneratePoints(text, 3, width, height);
+    private createParticles(text: string, density: number, width: number, height: number): HomesickParticle[] {
+        const points = Sampler.GeneratePoints(text, density, width, height);
         const texture = PIXI.Texture.from("./assets/particle.png");
 
         const particles = new Array<HomesickParticle>();
