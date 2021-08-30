@@ -1,42 +1,38 @@
+import { Point } from "./point";
+
 export class Input {
-    data: PointerInput;
+    private position: Point;
+    private active: boolean = false;
 
     constructor() {
-        this.data = new PointerInput(0, 0, 100 / (window.devicePixelRatio ?? 1));
+        this.position = new Point(0, 0);
 
         document.addEventListener("pointermove", this.pointerMove.bind(this), false);
         document.addEventListener("touchstart", this.touchStart.bind(this), false);
         document.addEventListener("touchend", this.touchEnd.bind(this), false);
     }
 
-    pointerMove(e: PointerEvent) {
-        this.data.x = e.clientX;
-        this.data.y = e.clientY;
+    get x(): number { return this.position.x; }
+    get y(): number { return this.position.y; }
+    get isActive(): boolean { return this.active; }
+
+    private pointerMove(e: PointerEvent) {
+        this.position.x = e.clientX;
+        this.position.y = e.clientY;
+        this.active = true;
     }
 
-    touchStart(e: TouchEvent) {
+    private touchStart(e: TouchEvent) {
         if (e.touches?.length > 0) {
-            this.data.x = e.touches[0].clientX;
-            this.data.y = e.touches[0].clientY;
+            this.position.x = e.touches[0].clientX;
+            this.position.y = e.touches[0].clientY;
+            this.active = true;
         }
     }
 
-    touchEnd() {
-        this.data.x = -1;
-        this.data.y = -1;
+    private touchEnd() {
+        this.position.x = -1;
+        this.position.y = -1;
+        this.active = false;
     }
-}
-
-export class PointerInput {
-    x: number;
-    y: number;
-    private _radius: number
-
-    constructor(x: number, y: number, radius: number) {
-        this.x = x;
-        this.y = y;
-        this._radius = radius;
-    }
-
-    get radius(): number { return this._radius; }
 }
